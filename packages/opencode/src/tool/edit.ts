@@ -57,6 +57,8 @@ export const EditTool = Tool.define("edit", {
           metadata: {
             filepath: filePath,
             diff,
+            contentOld,
+            contentNew,
           },
         })
         await Bun.write(filePath, params.newString)
@@ -85,6 +87,8 @@ export const EditTool = Tool.define("edit", {
         metadata: {
           filepath: filePath,
           diff,
+          contentOld,
+          contentNew,
         },
       })
 

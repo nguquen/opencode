@@ -71,6 +71,21 @@ export namespace ACP {
             case "permission.asked":
               try {
                 const permission = event.properties
+                const kind = toToolKind(permission.permission)
+                const content: ToolCallContent[] = []
+                if (kind === "edit") {
+                  const metadata = permission.metadata
+                  const filePath = typeof metadata["filepath"] === "string" ? metadata["filepath"] : ""
+                  const oldText = typeof metadata["contentOld"] === "string" ? metadata["contentOld"] : ""
+                  const newText = typeof metadata["contentNew"] === "string" ? metadata["contentNew"] : ""
+                  content.push({
+                    type: "diff",
+                    path: filePath,
+                    oldText,
+                    newText,
+                  })
+                }
+
                 const res = await this.connection
                   .requestPermission({
                     sessionId,
@@ -79,7 +94,8 @@ export namespace ACP {
                       status: "pending",
                       title: permission.permission,
                       rawInput: permission.metadata,
-                      kind: toToolKind(permission.permission),
+                      kind,
+                      content,
                       locations: toLocations(permission.permission, permission.metadata),
                     },
                     options,
