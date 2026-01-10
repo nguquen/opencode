@@ -86,13 +86,15 @@ export namespace ACP {
                   })
                 }
 
+                const title = `${permission.permission} (${permission.patterns.join(", ")})`
+
                 const res = await this.connection
                   .requestPermission({
                     sessionId,
                     toolCall: {
                       toolCallId: permission.tool?.callID ?? permission.id,
                       status: "pending",
-                      title: permission.permission,
+                      title: title,
                       rawInput: permission.metadata,
                       kind,
                       content,
